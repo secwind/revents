@@ -2,13 +2,13 @@ import React, { Component } from 'react'
 import { Grid, Button } from 'semantic-ui-react'
 import EventList from '../EventList/EventList';
 import EventForm from '../EventForm/EventForm';
-
+import  cuid  from 'cuid'
 
 const eventsDashborad = [
   {
     id: '1',
     title: 'Trip to Tower of London',
-    date: '2018-03-27T11:00:00+00:00',
+    date: '2018-03-27',
     category: 'culture',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
@@ -32,7 +32,7 @@ const eventsDashborad = [
   {
     id: '2',
     title: 'Trip to Punch and Judy Pub',
-    date: '2018-03-28T14:00:00+00:00',
+    date: '2018-03-28',
     category: 'drinks',
     description:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Phasellus sollicitudin ligula eu leo tincidunt, quis scelerisque magna dapibus. Sed eget ipsum vel arcu vehicula ullamcorper.',
@@ -60,12 +60,14 @@ class EventDashboard extends Component {
 
     state = {
       events: eventsDashborad,
-      isOpen: false
+      isOpen: false,
+      selectEvent: null
     }
   
     openFormEvent = (think) => {
       this.setState({
-        isOpen: !this.state.isOpen
+        isOpen: !this.state.isOpen,
+        selectEvent: null
       })
       console.log(think);
       
@@ -76,6 +78,48 @@ class EventDashboard extends Component {
         isOpen: false
       })
     }
+
+    updateEvent = (dataUpdate) => {
+        this.setState({
+          events: this.state.events.map((event) => {
+            if (event.id === dataUpdate.id) {
+              return Object.assign({}, dataUpdate);
+            } else {
+              return event
+            }
+          }), 
+          isOpen: false,
+          selectEvent: null
+        })
+    }
+
+    handleEditEvent = (updateEvent) => () => {
+      this.setState({
+        selectEvent:updateEvent,
+        isOpen: true
+      })
+    }
+
+    handleCreateEvent = (newEvent) => {
+      newEvent.id = cuid();
+      newEvent.hostPhotoURL = 'assets/images/user.png';
+      const updateEvent = [...this.state.events, newEvent];
+      this.setState({
+        events: updateEvent,
+        isOpen: false
+      })
+    }
+
+    handleDeleteEvents = (eveniId) => () => {
+      const updateEvent = this.state.events.filter( e => e.id !== eveniId );
+      this.setState({
+        events: updateEvent
+      })  
+      console.log('ID ที่ถูกลบคือ :',eveniId);
+      
+    }
+
+
   render() {
      const { events, isOpen } = this.state;
      
@@ -84,14 +128,25 @@ class EventDashboard extends Component {
       <Grid>
             <Grid.Column width={10}>
               <h1>EventListItem</h1>
-              <EventList events={events}/>
+              <EventList 
+                handleDeleteEvents={this.handleDeleteEvents}
+                events={events}
+                handleEditEvent={this.handleEditEvent}
+                
+              />
             </Grid.Column>
             <Grid.Column width={6}>
               <Button 
                 onClick={this.openFormEvent.bind(this,'เปิด-ปิด ฟอร์ม')}
                 positive content='Create Event'
               />
-              {isOpen && <EventForm closeFormEvent={this.closeFormEvent.bind(this)}/>}
+              {isOpen && 
+                <EventForm 
+                  closeFormEvent={this.closeFormEvent.bind(this)}
+                  updateEvent={this.updateEvent}
+                  handleCreateEvent={this.handleCreateEvent}
+                  selectEvent={this.state.selectEvent}
+                />}
               
             </Grid.Column>  
       </Grid>
