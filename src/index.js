@@ -1,8 +1,9 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import './index.css';
-import registerServiceWorker from './registerServiceWorker';
 import App from './app/layout/App';
+import 'semantic-ui-css/semantic.min.css';
+
 
 const rootEL = document.getElementById('root');
 
@@ -16,4 +17,4 @@ if (module.hot) {
     })
 }
 render();
-registerServiceWorker();
+
