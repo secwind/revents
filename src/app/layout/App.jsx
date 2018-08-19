@@ -9,6 +9,8 @@ import UserDetail from '../../features/user/UserDetail/UserDetail';
 import SettingDashborad from '../../features/user/Settings/SettingDashborad';
 import EventForm from '../../features/event/EventForm/EventForm';
 import HomePage from '../../features/home/HomePage';
+import TestComponent from '../../features/testSW/TestComponent';
+
 
 class App extends Component {
   render() {
@@ -16,6 +18,7 @@ class App extends Component {
       <div>
         <Switch>
           <Route exact path="/" component={HomePage} />
+          
         </Switch>
         <Route
           path="/(.+)"
@@ -30,6 +33,7 @@ class App extends Component {
                   <Route path="/profile/:id" component={UserDetail} />
                   <Route path="/settings" component={SettingDashborad} />
                   <Route path="/createEvent" component={EventForm} />
+                  <Route path="/test" component={TestComponent} />
                 </Switch>
               </Container>
             </div>
