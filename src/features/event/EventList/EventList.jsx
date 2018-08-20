@@ -4,7 +4,7 @@ import EventListItem from './EventListItem';
 
 class EventList extends Component {
   render() {
-    const {events, handleEditEvent, handleDeleteEvents} = this.props;
+    const {events, handleEditEvent, DeleteEvents} = this.props;
     return (
       <div>
         {events.map((event) =>(
@@ -12,7 +12,7 @@ class EventList extends Component {
             key={event.id} 
             event={event} 
             handleEditEvent={handleEditEvent}
-            handleDeleteEvents={handleDeleteEvents}
+            DeleteEvents={DeleteEvents}
         />
         ))}
         
