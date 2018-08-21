@@ -6,6 +6,7 @@ import 'semantic-ui-css/semantic.min.css';
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from 'react-redux'
 import { ConfigStore } from './app/store/ConfigStore';
+import  ScrollToTop  from './app/common/unit/ScrollToTop'
 
 const store = ConfigStore();
 
@@ -15,7 +16,9 @@ let render = () => {
     ReactDOM.render(
         <Provider store={store}>
             <BrowserRouter>
-                <App />
+                <ScrollToTop>
+                 <App />
+                </ScrollToTop>    
             </BrowserRouter>
         </Provider>,
         rootEL  
