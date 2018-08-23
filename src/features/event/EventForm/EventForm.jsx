@@ -1,3 +1,4 @@
+/*global google*/
 import React, { Component } from 'react';
 import { Segment, Form, Button, Grid, Header } from 'semantic-ui-react';
 import { connect } from 'react-redux';
@@ -16,6 +17,9 @@ import {
 } from 'revalidate';
 import DateInput from './../../../app/form/DateInput';
 import moment from 'moment' //อันนี้ขาดไม่ได้เลย ถ้าใช้ของ DateInput
+import PlaceInput from './../../../app/form/PlaceInput';
+import Script from 'react-load-script'
+import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 
 const mapState = (state, urlProps) => {
   const eventId = urlProps.match.params.id;
@@ -63,8 +67,37 @@ const validate = combineValidators({
 });
 
 class EventForm extends Component {
+    state = {
+      cityLatLng: {},
+      venueLatLng:{},
+      scriptLoaded: false
+    }
+
+    handleCitySelect = (selectCity) => {
+      geocodeByAddress(selectCity)
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({cityLatLng: latlng})
+      })
+      .then(() => {
+        this.props.change('city', selectCity)
+      })
+    }
+
+    handleVenueSelect = (selectVenue) => {
+      geocodeByAddress(selectVenue)
+      .then(results => getLatLng(results[0]))
+      .then(latlng => {
+        this.setState({venueLatLng: latlng})
+      })
+      .then(() => {
+        this.props.change('venue', selectVenue)
+      })
+    }
+
   onFormSubmit = values => {
     values.date = moment(values.date).format()
+    values.venueLatLng = this.state.venueLatLng
     const { createEvent, updateEvent, initialValues } = this.props;
     ///  values คือ data ทั้งหมดของ form submit เกิดจาก redux form API
     if (initialValues.id) {
@@ -105,10 +138,15 @@ class EventForm extends Component {
   //     event: newEvent
   //   });
   // };
+  handleSrciptLoaded = () => this.setState({ scriptLoaded: true })
   render() {
     const { invalid, submitting, pristine } = this.props;
     return (
       <Grid>
+        <Script
+          url='https://maps.googleapis.com/maps/api/js?key=AIzaSyDDyDxF3OENXx4s3v_EFCltoQmeJqhcAYM&libraries=places'
+          onLoad={this.handleSrciptLoaded}
+        />
         <Grid.Column width={10}>
           <Segment>
             <Header sub color="teal" content="Event Details" />
@@ -138,15 +176,26 @@ class EventForm extends Component {
               <Field
                 name="city"
                 type="text"
-                component={TextInput}
+                component={PlaceInput}
+                options={{type: [('cities')] }}
                 placeholder="Your City..."
+                onSelect={this.handleCitySelect}
               />
-              <Field
-                name="venue"
-                type="text"
-                component={TextInput}
-                placeholder="Event Venue..."
-              />
+              {
+                this.state.scriptLoaded &&
+                <Field
+                  name="venue"
+                  type="text"
+                  component={PlaceInput}
+                  options={{
+                    location: new google.maps.LatLng(this.state.cityLatLng),
+                    radius: 1000,
+                    type: ['establishment'] 
+                  }}
+                  placeholder="Event Venue..."
+                  onSelect={this.handleVenueSelect}
+                />
+              }
               <Field
                 name="date"
                 type="text"
