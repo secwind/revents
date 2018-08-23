@@ -1,6 +1,7 @@
 import React from 'react'
 import { Segment, Icon, Grid, Button} from 'semantic-ui-react';
 
+
 const EventDetailInfo = ({event}) => {
   return (
        <Segment.Group>
