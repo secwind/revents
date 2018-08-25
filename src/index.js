@@ -7,10 +7,12 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from 'react-redux'
 import { ConfigStore } from './app/store/ConfigStore';
 import  ScrollToTop  from './app/common/unit/ScrollToTop'
+import { loadEvents } from './features/event/eventActions'
 
-const store = ConfigStore();
+const store = ConfigStore()
+store.dispatch(loadEvents())
 
-const rootEL = document.getElementById('root');
+const rootEL = document.getElementById('root')
 
 let render = () => { 
     ReactDOM.render(
