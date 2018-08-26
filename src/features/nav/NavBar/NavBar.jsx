@@ -5,12 +5,11 @@ import SignOutMenu from '../Menus/SignOutMenu';
 import SignInMenu from '../Menus/SignInMenu';
 import { connect } from 'react-redux'
 import { openModal } from '../../modals/modalActions'
-import { logout } from '../../auth/authActions'
 import { withFirebase } from 'react-redux-firebase'
 
 const actions = {
   openModal,
-  logout
+
 }
 
 const mapState = (state) => ({

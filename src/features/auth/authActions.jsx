@@ -1,5 +1,4 @@
 import { SubmissionError } from 'redux-form'
-import { SIGN_OUT_USER } from './authConstants'
 import { closeModal } from '../modals/modalActions'
 
 export const login = (refUser) => {
@@ -21,8 +20,31 @@ export const login = (refUser) => {
     }
 }
 
-export const logout = () => {
-    return {
-        type: SIGN_OUT_USER
+export const registerUser = (user) =>
+    async (dispatch, getState, {getFirebase, getFirestore}) => {
+        const firebase = getFirebase()
+        const firestore = getFirestore()
+        try {
+            // create user in auth
+            let createUser = await firebase
+                .auth()
+                .createUserWithEmailAndPassword(user.email, user.password)
+            // update the auth profile
+            await createUser.updateProfile({
+                displayName: user.displayName 
+            })
+            // create in profile in firestore
+            // newUser คือการสร้างข้อมูลไป firestore Collection 'users'
+            let newUser = {
+                displayName: user.displayName,
+                createdAt: firestore.FieldValue.serverTimestamp()
+            }
+            //firestore.set(`users/${createUser.uid}`, {...newUser}) คือ
+            // คือการสร้างข้อมูลไป firestore Collection 'users'  ${createUser.uid}`คือ docชื่อตรงกับ auth.uid, ตามด้วย {...newUser} คือข้อมูลที่บันทึกลงไป
+            await firestore.set(`users/${createUser.uid}`, {...newUser})
+            dispatch(closeModal())
+        } catch (error) {
+            console.log(error)
+            
+        }
     }
-}
