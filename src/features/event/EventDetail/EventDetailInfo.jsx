@@ -1,14 +1,22 @@
 import React, { Component } from 'react';
 import { Segment, Icon, Grid, Button } from 'semantic-ui-react';
 import EventDetailMap from './EventDetailMap';
+import format from 'date-fns/format'
 
 class EventDetailInfo extends Component {
   state = {
     showMap: false
   };
 
+  componentWillUnmount() {
+    this.setState({
+      showMap: false
+    })
+  }
+
   showMapToggle = () => {
     this.setState(prevState => ({
+      // showMap คือแสดงแผนที่ใน googleMap
       showMap: !prevState.showMap
     }));
   };
@@ -33,7 +41,7 @@ class EventDetailInfo extends Component {
               <Icon name="calendar" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <span>{event.date}</span>
+              <span>{format(event.date, 'dddd Do MMMM')} {' '} at {format(event.date, 'h:mm A')} </span>
             </Grid.Column>
           </Grid>
         </Segment>
