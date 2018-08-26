@@ -6,6 +6,7 @@ import SignInMenu from '../Menus/SignInMenu';
 import { connect } from 'react-redux'
 import { openModal } from '../../modals/modalActions'
 import { logout } from '../../auth/authActions'
+import { withFirebase } from 'react-redux-firebase'
 
 const actions = {
   openModal,
@@ -13,7 +14,7 @@ const actions = {
 }
 
 const mapState = (state) => ({
-  auth : state.auth
+  auth : state.firebase.auth
 })
 
 
@@ -29,12 +30,12 @@ class NavBar extends Component {
 
 
   handleSignOut = () => {
-    this.props.logout()
+    this.props.firebase.logout()
     this.props.history.push('/');
   };
   render() {
     const { auth } = this.props;
-    const authenticated = auth.authenticated
+    const authenticated = auth.isLoaded && !auth.isEmpty
     return (
       <div>
         <Menu inverted fixed="top">
@@ -61,7 +62,7 @@ class NavBar extends Component {
               </Menu.Item>
             )}
             {authenticated ? (
-              <SignInMenu  currentUser={auth.currentUser} signOut={this.handleSignOut} />
+              <SignInMenu  auth={auth} signOut={this.handleSignOut} />
             ) : (
               <SignOutMenu signIn={this.handleSignIn} register={this.handleRegister}/>
             )}
@@ -73,7 +74,7 @@ class NavBar extends Component {
 }
 
 export default 
-  withRouter(
+  withRouter(withFirebase(
       connect(mapState, actions)(NavBar)
-  )
+  ))
 // (connect(null, actions) ถ้าไม่มี mapState ต้องใส่ null

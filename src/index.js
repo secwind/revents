@@ -7,12 +7,11 @@ import { BrowserRouter } from "react-router-dom";
 import { Provider } from 'react-redux'
 import { ConfigStore } from './app/store/ConfigStore';
 import  ScrollToTop  from './app/common/unit/ScrollToTop'
-import { loadEvents } from './features/event/eventActions'
 import 'react-redux-toastr/lib/css/react-redux-toastr.min.css'
 import ReduxToastr from 'react-redux-toastr'
 
 const store = ConfigStore()
-store.dispatch(loadEvents())
+
 
 const rootEL = document.getElementById('root')
 

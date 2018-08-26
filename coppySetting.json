@@ -1,29 +1,40 @@
 {
-  "workbench.iconTheme": "material-icon-theme",
-  "vsicons.projectDetection.autoReload": true,
-  "editor.snippetSuggestions": "top",
-  "files.autoSave": "afterDelay",
-  "editor.wordWrap": "on",
-  "prettier.singleQuote": true,
-  "liveServer.settings.donotShowInfoMsg": true,
+    "workbench.iconTheme": "material-icon-theme",
+    "vsicons.projectDetection.autoReload": true,
+    // "editor.snippetSuggestions": "top",
+    "files.autoSave": "afterDelay",
+    "editor.wordWrap": "on",
+    "prettier.singleQuote": true,
+    "liveServer.settings.donotShowInfoMsg": true,
 
+    /* Element */
+    "emmet.includeLanguages": {
+        "javascript": "javascriptreact"
+    },
+    "emmet.syntaxProfiles": {
+        "javascript": "jsx",
+        "javascript": "html",
+    },
 
-  "emmet.includeLanguages": {
-      "javascript": "javascriptreact"
-  },
-  "emmet.syntaxProfiles": {
-      "javascript": "jsx",
-      "javascript": "html",
-  },
+    "importCost.showCalculatingDecoration": true,
+    "importCost.mediumPackageColor": "#7cc36e",
+    "importCost.largePackageColor": "#d44e40",
+    "importCost.smallPackageColor": "#7cc36e",
+    "material-icon-theme.showReloadMessage": true,
+    "material-icon-theme.showUpdateMessage": true,
+    "path-intellisense.extensionOnImport": true,
+    "window.zoomLevel": 1,
+    "editor.formatOnSave": true,
 
-  "importCost.showCalculatingDecoration": true,
-  "importCost.mediumPackageColor": "#7cc36e",
-  "importCost.largePackageColor": "#d44e40",
-  "importCost.smallPackageColor": "#7cc36e",
-  "material-icon-theme.showReloadMessage": true,
-  "material-icon-theme.showUpdateMessage": true,
-  "path-intellisense.extensionOnImport": true,
-  "window.zoomLevel": 1,
-  "editor.formatOnSave": true,
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "html"
+    ],
 
+    "eslint.alwaysShowStatus": true,
+    "eslint.enable": true,
+    "eslint.packageManager": "npm",
+  
+ 
 }
