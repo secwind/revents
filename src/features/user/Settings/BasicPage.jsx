@@ -77,6 +77,3 @@ export default reduxForm({
   enableReinitialize: true,
   destroyOnUnmount: false
 })(BasicsPage);
-
-
-//33
