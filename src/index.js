@@ -38,5 +38,12 @@ if (module.hot) {
         setTimeout(render)
     })
 }
-render();
+
+
+// กำลังบอกว่า ถ้าใน store มีข้อมูล firebaseAuth // isLoaded: true ก็ให้ render app ได้
+store.firebaseAuthIsReady.then(() => {
+    render();
+})
+
+
 

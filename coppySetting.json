@@ -34,7 +34,7 @@
 
     "eslint.alwaysShowStatus": true,
     "eslint.enable": true,
-    "eslint.packageManager": "npm",
+    "eslint.packageManager": "npm"
   
  
 }
