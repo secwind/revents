@@ -5,9 +5,9 @@ import { connect } from 'react-redux';
 import { createEvent, updateEvent } from './../eventActions';
 import uuid from 'uuid';
 import { reduxForm, Field } from 'redux-form';
-import TextInput from './../../../app/form/TextInput';
-import TextArea from './../../../app/form/TextArea';
-import SelectInput from './../../../app/form/SelectInput';
+import TextInput from '../../../app/common/form/TextInput'
+import TextArea from '../../../app/common/form/TextArea';
+import SelectInput from '../../../app/common/form/SelectInput';
 import {
   composeValidators,
   combineValidators,
@@ -15,9 +15,9 @@ import {
   hasLengthGreaterThan
   // hasLengthLessThan
 } from 'revalidate';
-import DateInput from './../../../app/form/DateInput';
+import DateInput from '../../../app/common/form/DateInput';
 import moment from 'moment' //อันนี้ขาดไม่ได้เลย ถ้าใช้ของ DateInput
-import PlaceInput from './../../../app/form/PlaceInput';
+import PlaceInput from '../../../app/common/form/PlaceInput';
 import Script from 'react-load-script'
 import { geocodeByAddress, getLatLng } from 'react-places-autocomplete'
 

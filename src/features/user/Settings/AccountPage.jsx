@@ -1,7 +1,7 @@
 import React from 'react';
 import { Segment, Header, Form, Divider, Label, Button, Icon } from 'semantic-ui-react';
 import { Field, reduxForm } from 'redux-form';
-import TextInput from '../../../app/form/TextInput';
+import TextInput from '../../../app/common/form/TextInput';
 import { combineValidators, matchesField, isRequired, composeValidators } from 'revalidate'
 
 const validate = combineValidators({
