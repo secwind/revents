@@ -62,7 +62,7 @@ const AboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
           name="occupation"
           type="text"
           component={TextInput}
-          placeholder="Occupation"
+          placeholder="อาชีพ"
         />
         <Field
           width={8}

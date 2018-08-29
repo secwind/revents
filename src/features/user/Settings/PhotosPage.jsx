@@ -41,7 +41,9 @@ const mapState = state => ({
   profile: state.firebase.profile,
 
   // photos: state.firestore.ordered.photos มาจากคลังสมมุติ
-  photos: state.firestore.ordered.photos
+  photos: state.firestore.ordered.photos,
+
+  loading: state.async.loading
 });
 
 class PhotosPage extends Component {
@@ -110,7 +112,7 @@ class PhotosPage extends Component {
     })
   }
   render() {
-    const { profile, photos } = this.props;
+    const { profile, photos, loading } = this.props;
     let filteredPhotos
     if (photos) {
       filteredPhotos = photos.filter(photo => {
@@ -161,12 +163,14 @@ class PhotosPage extends Component {
                 />
                 <Button.Group>
                   <Button
+                    loading={loading}
                     onClick={this.uploadImage}
                     style={{ width: '100px' }}
                     positive
                     icon="check"
                   />
                   <Button
+                    disable={loading}
                     onClick={this.cancelCrop}
                     style={{ width: '100px' }}
                     icon="close"
@@ -182,7 +186,7 @@ class PhotosPage extends Component {
 
         <Card.Group itemsPerRow={5}>
           <Card>
-          {/* profile.photoURL คือรูปโปรไฟล์ ข้อมูลมาจาก state.firebase.profile.photoURL */}
+          {/* profile.photoURL คือรูปโปรไฟล์ ข้อมูลมาจาก state.firebase.profile.photoURL  ถ้าไม่มีก็ใช้รุปของ '/assets/images/user.png'*/}
             <Image src={profile.photoURL || '/assets/images/user.png'} />
             <Button positive>Main Photo</Button>
           </Card>     
