@@ -71,27 +71,43 @@ class EventForm extends Component {
     venueLatLng: {},
     scriptLoaded: false
   };
+ 
+  async componentDidMount() {
+    const { firestore, match } = this.props;
+    await firestore.setListener(`events/${match.params.id}`);
+  }
+
+  async componentWillUnmount() {
+    const { firestore, match } = this.props;
+    await firestore.unsetListener(`events/${match.params.id}`);
+  }
+
+  handleSrciptLoaded = () => this.setState({ scriptLoaded: true });
 
   handleCitySelect = selectCity => {
     geocodeByAddress(selectCity)
       .then(results => getLatLng(results[0]))
       .then(latlng => {
-        this.setState({ cityLatLng: latlng });
+        this.setState({ 
+          cityLatLng: latlng 
+        })
       })
       .then(() => {
-        this.props.change('city', selectCity);
-      });
-  };
+        this.props.change('city', selectCity)
+      })
+  }
 
   handleVenueSelect = selectVenue => {
     geocodeByAddress(selectVenue)
       .then(results => getLatLng(results[0]))
       .then(latlng => {
-        this.setState({ venueLatLng: latlng });
+        this.setState({ 
+          venueLatLng: latlng 
+        })
       })
       .then(() => {
-        this.props.change('venue', selectVenue);
-      });
+        this.props.change('venue', selectVenue)
+      })
   };
 
   onFormSubmit = values => {
@@ -107,23 +123,9 @@ class EventForm extends Component {
       this.props.createEvent(values);
       this.props.history.push('/events');
     }
-
-    // const { createEvent, updateEvent } = this.props;
-    // event.preventDefault();
-
-    // if (this.state.event.id) {
-    //   updateEvent(this.state.event);
-    //   this.props.history.goBack();
-    // } else {
-    //   const newEvent = {
-    //     ...this.state.event,
-    //     id: uuid(),
-    //     hostPhotoURL: '/assets/images/user.png'
-    //   };
-    //   createEvent(newEvent);
-    //   this.props.history.push('/events');
-    // }
   };
+
+
 
   // onChange = e => {
   //   const newEvent = this.state.event;
@@ -132,17 +134,8 @@ class EventForm extends Component {
   //     event: newEvent
   //   });
   // };
-  async componentDidMount() {
-    const { firestore, match } = this.props;
-    await firestore.setListener(`events/${match.params.id}`);
-    // if (event.exists) {
-    //   this.setState({
-    //     venueLatLng: event.data().venueLatLng
-    //   })
-    // }
-  }
 
-  handleSrciptLoaded = () => this.setState({ scriptLoaded: true });
+ 
   render() {
     const { invalid, submitting, pristine, event, cancelToggle } = this.props;
     return (

@@ -74,7 +74,7 @@ export const deleteEvent = (eventId) => {
             eventId
         }
     }
-};
+}
 
 export const loadEvents = () => {
     return async dispatch => {

@@ -93,3 +93,60 @@ export const uploadProfileImage = (file, fileName) =>
                 throw new Error('ไม่สามารถเปลี่ยนรูปโปรไฟล์ได้')
             }
         } 
+
+        export const goingToEvent = (event) =>  
+        async (dispatch, getState, {getFirestore}) => {
+            const firestore = getFirestore()
+            const user = firestore.auth().currentUser
+            const photoURL = getState().firebase.profile.photoURL
+            const attendee = {
+                going: true,
+                joinDate: Date.now(),
+                photoURL: photoURL,
+                displayName: user.displayName,
+                host: false
+            }
+            try {
+                // ให้ update ข้อมูลของ Collection->events/doc ${event.id}
+                // โดยในข้อมูลคือ attendees.เลข id ของ doc users ข้อมูลคือ const attendee
+                await firestore.update(`events/${event.id}`, {
+                    [`attendees.${user.uid}`]: attendee
+                })
+                //ให้สร้าง Doc ให้ใน Collection event_attendee ชื่อ doc: ${event.id}_${user.uid}
+                await firestore.set(`event_attendee/${event.id}_${user.uid}`, {
+                    //eventId คือเลข doc ของ Collection->events
+                    eventId: event.id,
+                    //userId คือเลข doc ของ Collection->users
+                    userId: user.uid,
+                    // วันที่โพสจอย event ของเพื่อน
+                    eventDate: event.date,
+                    // เราไม่ใช่เจ้าของโพส เพราะเราแค่ join post
+                    host: false
+                })
+                toastr.success('Success', `คุณได้ร่วม Evnt ของ ${event.hostedBy} สำเร็จ`)
+            } catch (error) {
+                console.log(error)
+                toastr.error('Error!!', 'พบปัญหาการร่วม Event')
+            }
+        } 
+
+        export const cancelGoingToEvent = (event) =>  
+        async (dispatch, getState, {getFirestore}) => {
+            const firestore = getFirestore()
+            const user = firestore.auth().currentUser
+            try {
+               // สั่งให้ไปแก้ไขใน  collection events/${event.id} 
+               // ให้ ลบฟิลทั้งหมดของ attendees.${user.uid}
+               await firestore.update(`events/${event.id}`, { 
+                   [`attendees.${user.uid}`]: firestore.FieldValue.delete()
+               })
+               // และไปลบข้อมูลทั้งหมด collection event_attendee doc -> ${event.id}_${user.uid}
+               await firestore.delete(`event_attendee/${event.id}_${user.uid}`) 
+               toastr.success('Success', `คุณได้ยกเลิกการ Join Post ทั้งหมดใน Event นี้ของ ${event.hostedBy} สำเร็จ`)
+            } catch (error) {
+                console.log(error)
+                toastr.error('Error!!', 'พบปัญหาการยกเลิก Event')
+            }
+        } 
+
+        
