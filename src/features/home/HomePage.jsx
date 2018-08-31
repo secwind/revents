@@ -8,14 +8,14 @@ const HomePage = ({history}) => {
               <h1 className="ui inverted stackable header">
                 <img
                   className="ui image massive"
-                  src="/assets/logo.png"
+                  src="/assets/images/goShop.png"
                   alt="logo"
                 />
-                <div className="content">Re-vents</div>
+                <div className="content">Face Shop</div>
               </h1>
-              <h2>Do whatever you want to do</h2>
+              <h2>อะไรก็ขายได้ สมัครฟรีเวปหน้าร้าน</h2>
               <div className="ui huge white inverted button" onClick={() => history.push('/events')}>
-                Get Started
+                ไป Shop กันเลย
                 <i className="right arrow icon" />
               </div>
             </div>
