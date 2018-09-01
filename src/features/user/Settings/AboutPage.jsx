@@ -69,7 +69,7 @@ const AboutPage = ({ pristine, submitting, handleSubmit, updateProfile }) => {
           name="origin"
           options={{ types: ['(regions)'] }}
           component={PlaceInput}
-          placeholder="จังหวัดที่เกิด"
+          placeholder="ประเทศ"
         />
         <Divider />
         <Button

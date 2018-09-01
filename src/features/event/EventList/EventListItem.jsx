@@ -3,10 +3,12 @@ import { Segment, Item, Icon, Button, List, Label } from 'semantic-ui-react'
 import EventListAttendee from './EventListAttendee'
 import { Link } from 'react-router-dom'
 import format from 'date-fns/format'
+import { objectToArray } from '../../../app/common/unit/helpers'
 
 class EventListItem extends Component {
   render() {
-    const { event,  DeleteEvents } = this.props;
+    const { event } = this.props;
+    // event คือก้อน object ทั้งหมดของ firestore.ordered.events 
     return (
       <Segment.Group>
         <Segment>
@@ -14,9 +16,9 @@ class EventListItem extends Component {
             <Item>
               <Item.Image size="tiny" circular src={event.hostphotoURL} />
               <Item.Content>
-                <Item.Header as="a">{event.title}</Item.Header>
+                <Item.Header as={Link} to={`/event/${event.id}`}>{event.title}</Item.Header>
                 <Item.Description>
-                  Hosted by <a>{event.hostedBy}</a>
+                  Hosted by <Link to={`/profile/${event.hostUid}`}>{event.hostedBy}</Link>
                 </Item.Description>
                 {event.cancelled && 
                 <Label style={{top: '-40px'}} ribbon='right' color='red' content='This event has been canceled' />}
@@ -35,20 +37,13 @@ class EventListItem extends Component {
           {/* todo: attendees go here  // เป็นรูปเพื่อนที่ comments */}
           <List horizontal>
             {event.attendees &&
-              Object.values(event.attendees).map((attendee, index )=> (
-                <EventListAttendee event={attendee} key={index} />
+              objectToArray(event.attendees).map((attendee)=> (
+                <EventListAttendee attendee={attendee} key={attendee.id} />
               ))}
           </List>
         </Segment>
         <Segment clearing>
           <span>{event.description}</span>
-          <Button
-            onClick={DeleteEvents(event.id)}
-            as='a'
-            color="red"
-            floated="right"
-            content="Delete"
-          />
           <Button
             as={Link}
             to={`/event/${event.id}`}
