@@ -11,15 +11,19 @@ import UserDetailSidebar from './UserDetailSidebar'
 import UserDetailEvent from './UserDetailEvent'
 import { userDetailQuery } from '../userQueries'
 import  LoadingComponent  from '../../../app/layout/LoadingComponent'
+import { getUserEvents } from '../userAction'
 
 // userDetailQuery คือการกำหนดการ query firestore แสดงข้อมูลโดยผ่าน logic if else 
 
+const actions = {
+  getUserEvents
+}
 
 const mapState = (state, ownProps) => {
-  let userUid = {}
+  let userUid = null
   let profile = {}
 
-  // ถ้า params id เท่ากับ uid ของเจ้าของ ก็ให้แสดงข้อมูลของ เจ้าของ แต่ถ้าไม่เท่ากัน ก็แสดงว่าเจ้าของกำลังไปส่อง id ของเพื่อนจึงกำหนดให้ userUid เท่ากับ key สำคัญเพื่อไปกำหนด userDetailQuery
+  // ถ้า params id เท่ากับ uid ของผู้ใช้งานก็ให้แสดงข้อมูลของ เจ้าของ แต่ถ้าไม่เท่ากัน ก็แสดงว่าเจ้าของกำลังไปส่อง id ของเพื่อนจึงกำหนดให้ userUid เท่ากับ key สำคัญเพื่อไปกำหนด userDetailQuery
   if (ownProps.match.params.id === state.auth.uid) {
     profile = state.firebase.profile
   } else {
@@ -30,6 +34,8 @@ const mapState = (state, ownProps) => {
   return {
     profile,
     userUid,
+    events: state.events,
+    eventsLoading: state.async.loading,
     auth : state.firebase.auth,
     photos: state.firestore.ordered.storeAsPhotos,
     requesting: state.firestore.status.requesting
@@ -37,8 +43,21 @@ const mapState = (state, ownProps) => {
 }
 
 class UserDetailedPage extends Component {
+
+  async componentDidMount() {
+    /// เลขที่กำหนดหลังจาก etUserEvents(this.props.userUid, 3) คือเลขที่กำหนด case active ของ func getUserEvents
+    this.props.getUserEvents(this.props.userUid)
+
+  }
+
+  changeTab = (e, data) => {
+    this.props.getUserEvents(this.props.userUid, data.activeIndex)
+    console.log(data);
+    
+  }
+
   render() {
-    const {profile, photos, auth, match, requesting } = this.props
+    const {profile, photos, auth, match, requesting, events, eventsLoading } = this.props
     // isCurrentUser คือตรวจสอบว่า params.id ตรงกับผู้ใช้งานไหม
     const isCurrentUser = auth.uid === match.params.id
     const loading = Object.values(requesting).some(a => a === true)
@@ -57,13 +76,13 @@ class UserDetailedPage extends Component {
 
         <UserDetailPhoto photos={photos}/>  
 
-        <UserDetailEvent/>
+        <UserDetailEvent events={events} eventsLoading={eventsLoading} changeTab={this.changeTab}/>
       </Grid>
     );
   }
 }
 
-export default connect(mapState)(
+export default connect(mapState, actions)(
     //firestoreConnect คือเอา ข้อมูลของ (auth, userUid ในmapState)  มากับกัน func userDetailQuery
     firestoreConnect((auth, userUid) => userDetailQuery(auth, userUid))(UserDetailedPage)
   )
