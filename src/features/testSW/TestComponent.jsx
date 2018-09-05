@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
 import { incrementAsync, decrementAsync } from './TestAction'
-import { Button } from 'semantic-ui-react'
+import { Button, Card, Icon, Image } from 'semantic-ui-react'
 // import Script from 'react-load-script'
 // import ModalManager from '../modals/ModalManager'
 import { openModal } from '../modals/modalActions'
@@ -50,6 +50,23 @@ class TestComponent extends Component {
         <form onSubmit={this.handleFormSubmit}>
         <button type="submit">Submit</button>
       </form>
+
+      <Card>
+    <Image src='http://www.abigcenter.co.th/pdf/sw01' />
+    <Card.Content>
+      <Card.Header>Matthew</Card.Header>
+      <Card.Meta>
+        <span className='date'>Joined in 2015</span>
+      </Card.Meta>
+      <Card.Description>Matthew is a musician living in Nashville.</Card.Description>
+    </Card.Content>
+    <Card.Content extra>
+      <a>
+        <Icon name='user' />
+        22 Friends
+      </a>
+    </Card.Content>
+  </Card>
 
       </div>
     )

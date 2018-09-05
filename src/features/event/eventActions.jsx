@@ -138,3 +138,25 @@ async (dispatch,  getState ) => {
     dispatch(asyncActionError());
   }
 };
+
+// func สร้าง Chat ด้วย RealTimeDataBase
+export const addEventComment = (eventId, values, parentId) => 
+  async (dispatch, getState, {getFirebase}) => {
+  const firebase = getFirebase()
+  const profile = getState().firebase.profile
+  const user = firebase.auth().currentUser
+  let newComment = {
+    parentId: parentId,
+    displayName: profile.displayName,
+    photoURL: profile.photoURL || 'assets/images/user.png',
+    uid: user.uid,
+    text: values.comment,
+    date: Date.now()
+  }
+  try {
+    await firebase.push(`event_chat/${eventId}`, newComment)
+  } catch (error) {
+    console.log(error)
+    toastr.error('Error', 'เกิดปัญหาในการComment')
+  }
+}

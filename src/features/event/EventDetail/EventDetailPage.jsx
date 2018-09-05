@@ -5,11 +5,13 @@ import EventDetailInfo from './EventDetailInfo';
 import EventDetailSidebar from './EventDetailSidebar';
 import { Grid } from 'semantic-ui-react';
 import { connect } from 'react-redux';
-import { withFirestore } from 'react-redux-firebase';
-import { objectToArray } from '../../../app/common/unit/helpers';
+import { withFirestore, firebaseConnect, isEmpty } from 'react-redux-firebase';
+import { compose } from 'redux'
+import { objectToArray, createDataTree } from '../../../app/common/unit/helpers';
 import { goingToEvent, cancelGoingToEvent } from '../../user/userAction';
+import { addEventComment } from '../eventActions'
 
-const mapState = state => {
+const mapState = (state, ownProps) => {
   let event = {};
 
   if (state.firestore.ordered.events && state.firestore.ordered.events[0]) {
@@ -17,13 +19,15 @@ const mapState = state => {
   }
   return {
     event,
-    auth: state.firebase.auth
+    auth: state.firebase.auth,
+    eventChat: !isEmpty(state.firebase.data.event_chat) && objectToArray(state.firebase.data.event_chat[ownProps.match.params.id])
   };
 };
 
 const actions = {
   goingToEvent,
-  cancelGoingToEvent
+  cancelGoingToEvent,
+  addEventComment
 };
 
 class EventDetailPage extends Component {
@@ -38,7 +42,7 @@ class EventDetailPage extends Component {
   }
 
   render() {
-    const { event, auth, goingToEvent, cancelGoingToEvent } = this.props;
+    const { event, auth, goingToEvent, cancelGoingToEvent, addEventComment, eventChat } = this.props;
     //attendees = ถ้ามี state.firestore.oredered.events && ใน events มี attendees && objectToArray คือ event.attendees[0] ตัวแรก
     const attendees =
       event && event.attendees && objectToArray(event.attendees);
@@ -46,6 +50,7 @@ class EventDetailPage extends Component {
     const isHost = event.hostUid === auth.uid;
     //isHost = attendees.soome ให้ a.id หรือ id ทุกตรวจสอตัวของ attendees ตรวจสอบว่าทีตัวไหน === auth.uid หรือเรียกว่าตรงกับ id ผู้ที่กำลังใช้งานไหม ถ้ามีให้ trurn -> true ถ้าไม่มี  trurn -> false
     const isGoing = attendees && attendees.some(a => a.id === auth.uid);
+    const chatTree = !isEmpty(eventChat) && createDataTree(eventChat)
     return (
       <Grid>
         <Grid.Column width={10}>
@@ -57,7 +62,7 @@ class EventDetailPage extends Component {
             cancelGoingToEvent={cancelGoingToEvent}
           />
           <EventDetailInfo event={event} />
-          <EventDetailChat />
+          <EventDetailChat eventChat={chatTree} addEventComment={addEventComment} eventId={event.id} />
         </Grid.Column>
         <Grid.Column width={6}>
           <EventDetailSidebar attendees={attendees} />
@@ -67,9 +72,8 @@ class EventDetailPage extends Component {
   }
 }
 
-export default withFirestore(
-  connect(
-    mapState,
-    actions
-  )(EventDetailPage)
-);
+export default compose(
+  withFirestore,
+  connect(mapState,actions),
+  firebaseConnect((props) => ([`event_chat/${props.match.params.id}`]))
+)(EventDetailPage)
