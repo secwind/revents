@@ -66,7 +66,7 @@ const validate = combineValidators({
 });
 
 class EventForm extends Component {
-  state = {
+    state = {
     cityLatLng: {},
     venueLatLng: {},
     scriptLoaded: false
