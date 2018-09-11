@@ -1,11 +1,5 @@
 {
   "extends": [
-    "react-app", 
-    "eslint:recommended",
-    "plugin:react/recommended"
+    "react-app"
   ]
-       
-  }
-
-
- 
+}
