@@ -6,19 +6,29 @@ import { firestoreConnect } from 'react-redux-firebase';
 import { getEventsForDashboard } from '../eventActions';
 import LoadingComponent from '../../../app/layout/LoadingComponent';
 import EventActivity from '../EventActivity/EventActivity';
+import { compose } from 'redux';
 
-const query = [
-  {
-    collection: 'activity',
-    orderBy: ['timestamp', 'desc'],
-    limit: 5
-  }
-];
+const query = ({ auth }) => {
+  return [
+    {
+      collection: 'activity',
+      orderBy: ['timestamp', 'desc'],
+      limit: 10
+    },
+    {
+      collection: 'users',
+      doc: auth.uid,
+      storeAs: 'storeAsUsers'
+    }
+  ]
+}
 
 const mapState = state => ({
   events: state.events,
   loading: state.async.loading,
-  activities: state.firestore.ordered.activity
+  activities: state.firestore.ordered.activity,
+  user: state.firestore.ordered.storeAsUsers,
+  auth: state.firebase.auth
 });
 
 const actions = {
@@ -41,8 +51,8 @@ class EventDashboard extends Component {
     let next = await this.props.getEventsForDashboard();
     // console.log(next);
 
-    // ถ้า func getEventsForDashboard มีข้อมูลส่งมามากกว่า 1 ตัว ให้ setState
-    if (next && next.docs && next.docs.length > 1) {
+    // ถ้า func getEventsForDashboard มีข้อมูลส่งมามากกว่า 0 ตัว ให้ setState
+    if (next && next.docs && next.docs.length > 0) {
       this.setState({
         moreEvents: true,
         initialLoading: false
@@ -56,12 +66,33 @@ class EventDashboard extends Component {
       // เงื่อนไขคือให้ push this.state.newEvent ไปเรื่อยๆด้วยเอาข้อมูลมาเพิ่มจาก ...nextProps.events
       this.setState({
         newEvent: [...this.state.newEvent, ...nextProps.events]
-      });
+      })
     }
   }
 
+  // getSnapshotBeforeUpdate(prevProps, prevState) {
+  //   // Are we adding new items to the list?
+  //   // Capture the scroll position so we can adjust scroll later.
+  //   if (prevState.newEvent.length !== this.props.events.length) {
+  //     const event = [...prevProps.events, this.props.events.filter(item => item.id !== prevProps.events.id)]
+  //     console.log(event);
+  //     return event
+  //   }
+  //   return null;
+  // }
+
+  // componentDidUpdate(prevProps, prevState, snapshot) {
+
+  //   if (snapshot !== null) {
+  //     const newDataUpdate = this.state.newEvent;
+  //     this.setState({
+  //       newEvent: [...prevState.newEvent, ]
+  //     })
+  //   }
+  // }
+
   getNextEvents = async () => {
-    const { events, getEventsForDashboard } = this.props;
+    const { events, getEventsForDashboard} = this.props;
     // lastEvent คือการ get ข้อมูลตัวสุดท้าย แล้วเอา lastEvent ไปทำ func statAfter query อีกที
     let lastEvent = events && events[events.length - 1];
     // console.log(lastEvent);
@@ -74,10 +105,10 @@ class EventDashboard extends Component {
     }
   };
 
-  handleContextRef = contextRef => this.setState({contextRef})
+  handleContextRef = contextRef => this.setState({ contextRef });
 
   render() {
-    const { loading, activities } = this.props;
+    const { loading, activities,  user  } = this.props;
     const { newEvent, moreEvents } = this.state;
     if (this.state.initialLoading) {
       return <LoadingComponent inverted={true} />;
@@ -86,19 +117,22 @@ class EventDashboard extends Component {
     return (
       <Grid>
         <Grid.Column width={10}>
-        <div ref={this.handleContextRef}>
-          <EventList
-            events={newEvent}
-            loading={loading}
-            moreEvents={moreEvents}
-            getNextEvents={this.getNextEvents}
-          />
-        </div>
-          
+          <div ref={this.handleContextRef}>
+            <EventList
+              events={newEvent}
+              loading={loading}
+              moreEvents={moreEvents}
+              getNextEvents={this.getNextEvents}
+            />
+          </div>
         </Grid.Column>
 
         <Grid.Column width={6}>
-          <EventActivity activities={activities} contextRef={this.state.contextRef} />
+          <EventActivity
+            user={user}
+            activities={activities}
+            contextRef={this.state.contextRef}
+          />
         </Grid.Column>
 
         <Grid.Column width={10}>
@@ -109,7 +143,6 @@ class EventDashboard extends Component {
   }
 }
 
-export default connect(
-  mapState,
-  actions
-)(firestoreConnect(query)(EventDashboard));
+export default compose(connect(mapState, actions), firestoreConnect(props => query(props))) (EventDashboard)
+
+

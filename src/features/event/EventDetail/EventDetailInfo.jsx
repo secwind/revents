@@ -62,10 +62,12 @@ class EventDetailInfo extends Component {
             </Grid.Column>
             <Grid.Column width={4}>
               <Button
-                color="teal"
+                color={
+                  this.state.showMap ? 'teal' : 'orange'
+                }
                 size="tiny"
                 content={
-                  this.state.showMap ? 'Hide Locations' : 'See Locations'
+                  this.state.showMap ? 'ซ่อนแผนที่' : 'ดูแผนที่'
                 }
                 onClick={this.showMapToggle}
               />

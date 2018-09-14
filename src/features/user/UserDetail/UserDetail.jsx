@@ -11,12 +11,13 @@ import UserDetailSidebar from './UserDetailSidebar'
 import UserDetailEvent from './UserDetailEvent'
 import { userDetailQuery } from '../userQueries'
 import  LoadingComponent  from '../../../app/layout/LoadingComponent'
-import { getUserEvents } from '../userAction'
+import { getUserEvents, followUser } from '../userAction'
 
 // userDetailQuery คือการกำหนดการ query firestore แสดงข้อมูลโดยผ่าน logic if else 
 
 const actions = {
-  getUserEvents
+  getUserEvents,
+  followUser
 }
 
 const mapState = (state, ownProps) => {
@@ -57,7 +58,7 @@ class UserDetailedPage extends Component {
   }
 
   render() {
-    const {profile, photos, auth, match, requesting, events, eventsLoading } = this.props
+    const {profile, photos, auth, match, requesting, events, eventsLoading, followUser } = this.props
     // isCurrentUser คือตรวจสอบว่า params.id ตรงกับผู้ใช้งานไหม
     const isCurrentUser = auth.uid === match.params.id
     const loading = Object.values(requesting).some(a => a === true)
@@ -71,7 +72,7 @@ class UserDetailedPage extends Component {
 
         <UserDetailDescription profile={profile}/>
 
-        <UserDetailSidebar isCurrentUser={isCurrentUser}/>
+        <UserDetailSidebar profile={profile} followUser={followUser} isCurrentUser={isCurrentUser}/>
         
 
         <UserDetailPhoto photos={photos}/>  

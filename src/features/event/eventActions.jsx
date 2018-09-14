@@ -22,7 +22,8 @@ export const createEvent = event => {
     const firestore = getFirestore();
     const user = firestore.auth().currentUser;
     const photoURL = getState().firebase.profile.photoURL;
-    let newEvent = createNewEvent(user, photoURL, event);
+    const profileName = getState().firebase.profile.displayName;
+    let newEvent = createNewEvent(user, photoURL, event, profileName);
     try {
       let createdEvent = await firestore.add(`events`, newEvent);
       // create collection 'event_attendee' และให้ doc ชื่อว่า ${createdEvent.id}_${user.uid}`

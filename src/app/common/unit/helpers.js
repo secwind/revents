@@ -6,12 +6,14 @@ export const objectToArray = (object) => {
     }
 }
 
-export const createNewEvent = (user, photoURL, event ) => {
+export const createNewEvent = (user, photoURL, event, profileName ) => {
     event.date = moment(event.date).toDate()
     return {
         ...event,
         hostUid: user.uid,
         hostedBy: user.displayName,
+        displayName: user.displayName,
+        profileName: profileName,
         hostphotoURL: photoURL || '/assets/images/user.png',
         created: Date.now(),
         attendees: {

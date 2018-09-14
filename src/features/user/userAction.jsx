@@ -231,3 +231,30 @@ export const getUserEvents = (userUid, activeTab) => async (
       dispatch(asyncActionError())
   }
 };
+
+
+// userToFollow คือ object data ขอผู้ที่เรากดติดตาม
+export const followUser = userToFollow => async (dispatch, getState, {getFirestore}) => {
+  const firestore = getFirestore()
+  const user = firestore.auth().currentUser
+  const putData = {
+    photoURL: userToFollow.hostphotoURL || '/assets/images/user.png',
+    city: userToFollow.city || 'Unknown City',
+    displayName: userToFollow.displayName
+  }
+
+  try {
+    await firestore.set(
+      {
+        collection: 'users',
+        doc: user.uid,
+        //userToFollow.id คือ docId ผู้ที่เรากดติดตาม
+        subcollections: [{ collection:'following', doc: userToFollow.id}]
+      },
+      putData
+    )
+  } catch (error) {
+    console.log(error);
+    
+  }
+}

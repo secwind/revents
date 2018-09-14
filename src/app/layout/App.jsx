@@ -11,6 +11,7 @@ import EventForm from '../../features/event/EventForm/EventForm';
 import HomePage from '../../features/home/HomePage';
 import TestComponent from '../../features/testSW/TestComponent';
 import ModalManager from '../../features/modals/ModalManager'
+import SecWind from '../../features/testSW/SecWind'
 
 
 
@@ -38,6 +39,7 @@ class App extends Component {
                   <Route path="/settings" component={SettingDashborad} />
                   <Route path="/createEvent" component={EventForm} />
                   <Route path="/test" component={TestComponent} />
+                  <Route path="/secwind" component={SecWind} />
                 </Switch>
               </Container>
             </div>

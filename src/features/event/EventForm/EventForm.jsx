@@ -232,6 +232,8 @@ export default withFirestore(
     mapState,
     actions
   )(
+
+    // ส่งข้อมูล form: 'eventform' ใน rootReducer
     reduxForm({ form: 'eventform', enableReinitialize: true, validate })(
       EventForm
     )
