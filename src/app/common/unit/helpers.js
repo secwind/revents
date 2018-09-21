@@ -11,9 +11,10 @@ export const createNewEvent = (user, photoURL, event, profileName ) => {
     return {
         ...event,
         hostUid: user.uid,
-        hostedBy: user.displayName,
+        // hostedBy: คือชื่อถ้าสามารถแก้ไขได้เอง 
+        hostedBy: profileName,
+        //displayName: คือชื่อที่มาจาก mail ดั้งเดิม
         displayName: user.displayName,
-        profileName: profileName,
         hostphotoURL: photoURL || '/assets/images/user.png',
         created: Date.now(),
         attendees: {

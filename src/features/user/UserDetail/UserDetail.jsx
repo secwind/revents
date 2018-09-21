@@ -25,11 +25,12 @@ const mapState = (state, ownProps) => {
   let profile = {}
 
   // ถ้า params id เท่ากับ uid ของผู้ใช้งานก็ให้แสดงข้อมูลของ เจ้าของ แต่ถ้าไม่เท่ากัน ก็แสดงว่าเจ้าของกำลังไปส่อง id ของเพื่อนจึงกำหนดให้ userUid เท่ากับ key สำคัญเพื่อไปกำหนด userDetailQuery
-  if (ownProps.match.params.id === state.auth.uid) {
+  if (ownProps.match.params.id === state.firebase.auth.uid) {
     profile = state.firebase.profile
+    userUid = ownProps.match.params.id //userUid คือ /profile/{userUid}
   } else {
-    profile = !isEmpty(state.firestore.ordered.storeAsProfile) && state.firestore.ordered.storeAsProfile[0]
-    userUid = ownProps.match.params.id
+    profile = !isEmpty(state.firestore.ordered.storeAsProfile) && state.firestore.ordered.storeAsProfile[0];
+    userUid = ownProps.match.params.id; //userUid คือ /profile/{userUid}
   }
 
   return {
@@ -61,11 +62,11 @@ class UserDetailedPage extends Component {
     const {profile, photos, auth, match, requesting, events, eventsLoading, followUser } = this.props
     // isCurrentUser คือตรวจสอบว่า params.id ตรงกับผู้ใช้งานไหม
     const isCurrentUser = auth.uid === match.params.id
-    const loading = Object.values(requesting).some(a => a === true)
+    // const loading = Object.values(requesting).some(a => a === true)
     
-    if (loading) {
-      return <LoadingComponent inverted={true}/>
-    }
+    // if (loading) {
+    //   return <LoadingComponent inverted={true}/>
+    // }
     return (
       <Grid>
         <UserDetailHeader profile={profile}/>

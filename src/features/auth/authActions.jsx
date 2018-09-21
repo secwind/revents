@@ -1,14 +1,16 @@
 import { SubmissionError, reset } from 'redux-form'
 import { closeModal } from '../modals/modalActions'
 import { toastr } from 'react-redux-toastr'
+import { LOGIN_USER } from './authConstants';
 
-export const login = (refUser) => {
+export const login = (creds) => {
     return async (dispatch, getState, {getFirebase}) => {
-        // ส่งข้อมูล refUser คือข้อมูลที่มา จาก ReduxForm ในรูปแบบ object จึงต้องมี {refUser}
-        // dispatch({type: LOGIN_USER, payload: {refUser}})
+        // ส่งข้อมูล refUser คือข้อมูลที่มา จาก ReduxForm ในรูปแบบ object จึงต้องมี {creds}
+        
         const firebase = getFirebase()
         try {
-            await firebase.auth().signInWithEmailAndPassword(refUser.email, refUser.password)
+            await firebase.auth().signInWithEmailAndPassword(creds.email, creds.password)
+            dispatch({type: LOGIN_USER, payload: {creds}})
             dispatch(closeModal())
         } catch (error) {
             console.log(error)

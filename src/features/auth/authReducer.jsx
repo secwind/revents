@@ -11,7 +11,7 @@ export const loginUser = (state, payload) => {
     return {
         ...state,
         authenticated: true,
-        currentUser: payload.refUser.email
+        currentUser: payload.creds.email
     }
 }
 

@@ -81,6 +81,10 @@ class SecWind extends Component {
               ))}
           </Table.Body>
         </Table>
+
+        <div class="box up"></div>
+<div class="box down"></div>
+<div id="background"></div>
       </div>
     );
   }

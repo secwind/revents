@@ -3,7 +3,8 @@ import 'firebase/firestore'
 
 
 
-const firebaseConfig = {
+
+const config = {
     apiKey: "AIzaSyBScUOWmPPquMMz-_gBBgHYns43I864hFw",
     authDomain: "revents-3aac5.firebaseapp.com",
     databaseURL: "https://revents-3aac5.firebaseio.com",
@@ -12,9 +13,10 @@ const firebaseConfig = {
     messagingSenderId: "1043525366984"
 }
 
-firebase.initializeApp(firebaseConfig);
-const firestore = firebase.firestore();
 
-firestore.settings({timestampsInSnapshots: true})
+firebase.initializeApp(config);
+const firestore = firebase.firestore();
+const settings = {timestampsInSnapshots: true};
+firestore.settings(settings)
 
 export default firebase;

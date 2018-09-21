@@ -1,5 +1,7 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
+const cors = require('cors')({origin: true}); 
+
 admin.initializeApp(functions.config().firebase);
 
 exports.helloWorld = functions.https.onRequest((request, response) => {
@@ -10,8 +12,8 @@ const newActivity = (type, event, id) => {
   return {
     type: type,
     eventDate: event.date,
-    hostedBy: event.displayName,
-    profileName: event.profileName,
+    hostedBy: event.hostedBy,
+    displayName: event.displayName,
     title: event.title,
     photoURL: event.hostphotoURL,
     timestamp: admin.firestore.FieldValue.serverTimestamp(),
@@ -28,6 +30,7 @@ exports.createActivity = functions.firestore
 
     console.log(newEvent);
 
+    // data จากการ Create Collection user/doc  ขอมูลทั้งหมดคือ newEvent =  event.data();
     const activity = newActivity('newEvent', newEvent, event.id);
 
     console.log(activity);
@@ -137,7 +140,7 @@ exports.userFollowing = functions.firestore
 
     return follwerDoc.get().then(doc => {
       let userData = doc.data();
-      console.log('userData >>',userData);
+      console.log('userData >>', userData);
 
       // follower data object คือข้อมูลของผู้ใช้งาน
       let follower = {
@@ -156,3 +159,26 @@ exports.userFollowing = functions.firestore
         .set(follower);
     });
   });
+
+exports.outputAvatar = functions.https.onRequest((request, response) => {
+  const UserDocId = request.query.userdocid;
+  const getAvatar = admin
+    .firestore()
+    .collection('users')
+    .doc(UserDocId);
+  return getAvatar.get().then(doc => {
+    let secwind = doc.data();
+    console.log('userAvatarData >>', secwind);
+
+    // response.status(200).json({
+    //   message: [secwind]
+    // });
+    response.redirect(secwind.photoURL)
+    return admin
+      .firestore()
+      .collection('users')
+      .doc(UserDocId);
+  });
+});
+
+

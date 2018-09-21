@@ -113,11 +113,11 @@ async (dispatch,  getState ) => {
           .orderBy('date')
           // .startAfter(startAfter) เริ่มหลังจาก Doc id นี้
           .startAfter(startAfter)
-          .limit(2))
+          .limit(4))
       : (query = eventsRef
           // .where('date', '>=', today)
           .orderBy('date')
-          .limit(2));
+          .limit(4));
 
     let querySnap = await query.get();
 
