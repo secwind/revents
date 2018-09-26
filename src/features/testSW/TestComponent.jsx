@@ -5,13 +5,12 @@ import { Button, Card, Icon, Image } from 'semantic-ui-react';
 // import Script from 'react-load-script'
 // import ModalManager from '../modals/ModalManager'
 import { openModal } from '../modals/modalActions';
-// import axios from 'axios';
+import axios from 'axios';
 
 const mapState = state => ({
   data: state.test.data,
   loading: state.test.loading,
-  Uid: state.firebase.auth.uid,
-  yAuth: state.auth.currentUser
+  Uid: state.firebase.auth.uid
 });
 
 const actions = {
@@ -21,20 +20,38 @@ const actions = {
 };
 
 class TestComponent extends Component {
-  // state = {
-  //   persons: []
-  // }
+  state = {
+    persons: []
+  }
 
-  // componentDidMount() {
-  //   // axios.get(`https://jsonplaceholder.typicode.com/users`)
-  //   axios.get(`https://us-central1-revents-3aac5.cloudfunctions.net/outputAvatar?userdocid=LL7GcGLtySO2ZncD7mYi6SmAAr82`)
-  //     .then(res => {
-  //       const persons = res.data;
-  //       // this.setState({ persons: persons });
-  //       console.log(persons);
-
-  //     })
-  // }
+  componentDidMount() {
+    const self = this;
+    const url =
+      'https://us-central1-revents-3aac5.cloudfunctions.net/hello/wisanu?user=secwind';
+      axios
+      .get(url)
+      .then(res => {
+        const persons = res.data;
+        self.setState({ persons });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  }
+  getAxios = () => {
+    var self = this;
+    const url =
+      'https://us-central1-revents-3aac5.cloudfunctions.net/hello/wisanu?user=secwind';
+    axios
+      .get(url)
+      .then(function(response) {
+        console.log(response);
+        self.setState({ events: response.data });
+      })
+      .catch(function(error) {
+        console.log(error);
+      });
+  };
 
   render() {
     const {
@@ -43,13 +60,13 @@ class TestComponent extends Component {
       decrementAsync,
       openModal,
       loading,
-      Uid,
-      yAuth
+      Uid
     } = this.props;
 
     return (
       <div>
-        <h1>{yAuth.uid}</h1>
+        <button onClick={this.getAxios}>KKKKKKK</button>
+        <h1>{this.state.events}</h1>
 
         <h1>Test Store</h1>
         <h3>This Connect is {data}</h3>
@@ -79,7 +96,9 @@ class TestComponent extends Component {
 
         <Card>
           {/* <Image src='http://www.abigcenter.co.th/pdf/sw01' /> */}
-          <Image src={`https://us-central1-revents-3aac5.cloudfunctions.net/outputAvatar?userdocid=${Uid}`} />
+          <Image
+            src={`https://us-central1-revents-3aac5.cloudfunctions.net/outputAvatar?userdocid=${Uid}`}
+          />
           <Card.Content>
             <Card.Header>Matthew</Card.Header>
             <Card.Meta>
@@ -96,6 +115,9 @@ class TestComponent extends Component {
             </a>
           </Card.Content>
         </Card>
+        <ul>
+        { this.state.persons.map(person => <li>{person.name}</li>)}
+      </ul>
       </div>
     );
   }

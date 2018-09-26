@@ -14,7 +14,7 @@ class EventListItem extends Component {
         <Segment>
           <Item.Group>
             <Item>
-              <Item.Image size="tiny" circular src={event.hostphotoURL} />
+              <Item.Image size="tiny" circular src={`https://us-central1-revents-3aac5.cloudfunctions.net/outputAvatar?userdocid=${event.hostUid}`} />
               <Item.Content>
                 <Item.Header as={Link} to={`/event/${event.id}`}>{event.title}</Item.Header>
                 <Item.Description>

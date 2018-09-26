@@ -4,23 +4,20 @@ import { compose } from 'redux';
 import { firestoreConnect } from 'react-redux-firebase';
 import { Table } from 'semantic-ui-react';
 
-
-const query = ({auth}) => {
-
-    return [
-        {
-          collection: 'users',
-          doc: auth.uid,
-          storeAs: 'secwindAs'
-        }
-        // ,
-        // {
-        //   collection: 'event',
-        //   where: ('hostUid', '==', 'PTU4ydUE0EUyAjGIcsgf0QzTcND2'),
-        //   storeAs: 'secwindAsXXX'
-        // }
-      ]
-}
+const query = ({ auth }) => {
+  return [
+    {
+      collection: 'users',
+      storeAs: 'secwindAs'
+    }
+    // ,
+    // {
+    //   collection: 'event',
+    //   where: ('hostUid', '==', 'PTU4ydUE0EUyAjGIcsgf0QzTcND2'),
+    //   storeAs: 'secwindAsXXX'
+    // }
+  ];
+};
 
 // ส่ง props ไปหน้า /secwind
 const mapState = state => {
@@ -37,21 +34,35 @@ const mapState = state => {
     nameProfile,
     auth: state.firebase.auth,
     profile: state.firebase.profile,
-    dataFirestore: state.firestore.ordered.secwindAs && state.firestore.ordered.secwindAs[0]
+    dataFirestore:
+      state.firestore.ordered.secwindAs && state.firestore.ordered.secwindAs[0],
+    wisanu: state.firestore.ordered.secwindAs
   };
 };
 
 class SecWind extends Component {
   render() {
-    const { nameProfile, auth, dataFirestore} = this.props;
+    const { nameProfile, auth, dataFirestore, wisanu } = this.props;
     const myJSON = JSON.stringify(dataFirestore);
-   
-    
+
     const panes = [
-      { id: 'User Uid :', val: auth.uid, author: 'User Uid คือ docId ของ collections users' },
-      { id: 'displayName', val: auth.displayName, author: 'displayName คือชื่อเดิมที่ติดมาจาก email ไม่สามารถเปลี่ยนแปลงได้' },
-      { id: 'nameProfile', val: nameProfile, author: 'nameProfile คือชื่อที่สามารถเปลี่ยนแปลงได้ จาก firestore/users' },
-      { id: 'Hosting', val: auth.uid, author: 'dataFirestore.email'},
+      {
+        id: 'User Uid :',
+        val: auth.uid,
+        author: 'User Uid คือ docId ของ collections users'
+      },
+      {
+        id: 'displayName',
+        val: auth.displayName,
+        author:
+          'displayName คือชื่อเดิมที่ติดมาจาก email ไม่สามารถเปลี่ยนแปลงได้'
+      },
+      {
+        id: 'nameProfile',
+        val: nameProfile,
+        author: 'nameProfile คือชื่อที่สามารถเปลี่ยนแปลงได้ จาก firestore/users'
+      },
+      { id: 'Hosting', val: auth.uid, author: 'dataFirestore.email' }
     ];
     return (
       <div>
@@ -59,7 +70,7 @@ class SecWind extends Component {
         <Table celled>
           <Table.Header>
             <Table.Row>
-            <Table.HeaderCell>No.</Table.HeaderCell>
+              <Table.HeaderCell>No.</Table.HeaderCell>
               <Table.HeaderCell>ID NUMBER</Table.HeaderCell>
               <Table.HeaderCell>THIS VALUE</Table.HeaderCell>
               <Table.HeaderCell>Author</Table.HeaderCell>
@@ -69,11 +80,11 @@ class SecWind extends Component {
           <Table.Body>
             {panes &&
               panes.map((data, index) => (
-                <Table.Row key={index+1} >
+                <Table.Row key={index + 1}>
                   {/* <Table.Cell>
                     <Label ribbon>First</Label>
                     </Table.Cell> */}
-                  <Table.Cell>{index+1} .</Table.Cell>
+                  <Table.Cell>{index + 1} .</Table.Cell>
                   <Table.Cell>{data.id}</Table.Cell>
                   <Table.Cell>{data.val}</Table.Cell>
                   <Table.Cell>{data.author}</Table.Cell>
@@ -81,16 +92,19 @@ class SecWind extends Component {
               ))}
           </Table.Body>
         </Table>
+        <ul>
+          {wisanu && wisanu.map(person => (
+            <li>{person.photoURL}</li>
+          ))}
+        </ul>
 
-        <div class="box up"></div>
-<div class="box down"></div>
-<div id="background"></div>
+        <div className="box up" />
+        <div className="box down" />
+        <div id="background" />
       </div>
     );
   }
 }
-
-
 
 export default compose(
   connect(mapState),

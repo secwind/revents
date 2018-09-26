@@ -10,19 +10,17 @@ import SettingDashborad from '../../features/user/Settings/SettingDashborad';
 import EventForm from '../../features/event/EventForm/EventForm';
 import HomePage from '../../features/home/HomePage';
 import TestComponent from '../../features/testSW/TestComponent';
-import ModalManager from '../../features/modals/ModalManager'
-import SecWind from '../../features/testSW/SecWind'
-
-
+import ModalManager from '../../features/modals/ModalManager';
+import SecWind from '../../features/testSW/SecWind';
+import SearchMovie from '../../views/SearchMovie';
 
 class App extends Component {
   render() {
     return (
       <div>
-        <ModalManager/>
+        <ModalManager />
         <Switch>
           <Route exact path="/" component={HomePage} />
-          
         </Switch>
         <Route
           path="/(.+)"
@@ -40,6 +38,7 @@ class App extends Component {
                   <Route path="/createEvent" component={EventForm} />
                   <Route path="/test" component={TestComponent} />
                   <Route path="/secwind" component={SecWind} />
+                  <Route path="/movie" component={SearchMovie} />
                 </Switch>
               </Container>
             </div>

@@ -1,12 +1,35 @@
 const functions = require('firebase-functions');
 const admin = require('firebase-admin');
-const cors = require('cors')({origin: true}); 
+const express = require('express');
+const cors = require('cors');
+const app = express();
+// Automatically allow cross-origin requests
+app.use(cors({ origin: true }));
 
 admin.initializeApp(functions.config().firebase);
 
-exports.helloWorld = functions.https.onRequest((request, response) => {
-  response.send('Hello from Firebase!');
+// build multiple CRUD interfaces:
+//https://us-central1-revents-3aac5.cloudfunctions.net/hello/wisanu?user=xxxxx
+const xxx = '/wisanu';
+app.get(xxx, (req, res) => {
+  const UserDocId = req.query.user;
+  console.log(UserDocId);
+  res.send('Hello GET My Name is' + UserDocId);
 });
+app.post('/', (req, res) => {
+  res.send('Hello POST by noomerZx');
+});
+app.put('/', (req, res) => {
+  res.send('Hello PUT by noomerZx');
+});
+app.patch('/', (req, res) => {
+  res.send('Hello PATCH by noomerZx');
+});
+app.delete('/', (req, res) => {
+  res.send('Hello DELETE by noomerZx');
+});
+// Expose Express API as a single Cloud Function:
+exports.hello = functions.https.onRequest(app);
 
 const newActivity = (type, event, id) => {
   return {
@@ -173,12 +196,10 @@ exports.outputAvatar = functions.https.onRequest((request, response) => {
     // response.status(200).json({
     //   message: [secwind]
     // });
-    response.redirect(secwind.photoURL)
+    response.redirect(secwind.photoURL);
     return admin
       .firestore()
       .collection('users')
       .doc(UserDocId);
   });
 });
-
-

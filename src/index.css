@@ -107,48 +107,42 @@ body {
   padding-left: 2em !important;
 }
 
-
-
-.box{
-  height:200px;
-  width:200px;
-  border:2px solid black;
-  margin-top:10%;
-  margin-left:10%;
-  transition:5s;
+.box {
+  height: 200px;
+  width: 200px;
+  border: 2px solid black;
+  margin-top: 10%;
+  margin-left: 10%;
+  transition: 5s;
 }
 
-.up:hover{
+.up:hover {
   transform:/*  translateX(400px) */ rotate(7200deg);
-  border:15px solid white;
-  border-radius:100px;
-  background-color:#48dbfb;
-  box-shadow:0 0 100px #48dbfb;
+  border: 15px solid white;
+  border-radius: 100px;
+  background-color: #48dbfb;
+  box-shadow: 0 0 100px #48dbfb;
 }
 
-.down:hover{
+.down:hover {
   transform: translateX(150px) rotate(7200deg);
-  border:15px solid white;
-  border-radius:100px;
-  background-color:#f53b57;
-  box-shadow:0 0 100px #f53b57;
+  border: 15px solid white;
+  border-radius: 100px;
+  background-color: #f53b57;
+  box-shadow: 0 0 100px #f53b57;
 }
 
 #background {
-  position:absolute;
+  position: absolute;
   background-color: white;
   top: 0px;
   right: 0px;
   bottom: 0px;
   left: 0px;
   z-index: -1;
-  transition:5s;
+  transition: 5s;
 }
 
 .box:hover ~ #background {
   background-color: black;
 }
-
-/* 
-  This Fiddle Is Created By Yash Jain
- */
