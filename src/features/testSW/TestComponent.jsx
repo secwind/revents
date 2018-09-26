@@ -115,9 +115,7 @@ class TestComponent extends Component {
             </a>
           </Card.Content>
         </Card>
-        <ul>
-        { this.state.persons.map(person => <li>{person.name}</li>)}
-      </ul>
+
       </div>
     );
   }
